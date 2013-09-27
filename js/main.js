@@ -1,8 +1,3 @@
-function createMouseEvent(e) {
-	var mouseEvent = {};
-	return mouseEvent;
-}
-
 // The game
 function Game (mainCanvas) {
 	this.gameLoop = false;
@@ -15,6 +10,26 @@ function Game (mainCanvas) {
 	this.currentAudioSource = '';
 	this.eventListeners = {};
 	this.mouseButtons = [];
+	this.mousePosition = {};
+
+	function createMouseEvent(e) {
+		mouseEvent = {};
+		mouseEvent.x = e.offsetX;
+		mouseEvent.y = e.offsetY;
+		mouseEvent.left = e.offsetX;
+		mouseEvent.top = e.offsetY;
+		mouseEvent.bottom = this.mainCanvas.height - e.offsetY;
+		mouseEvent.right = this.mainCanvas.width - e.offsetX;
+		if (e.which) {
+			mouseEvent.button = function () {
+				if (e.which === 1) return 'left';
+				if (e.which === 2) return 'middle';
+				if (e.which === 3) return 'right';
+				return e.which;
+			}();
+		}
+		return mouseEvent;
+	}
 
 	function bindMouse(g) {
 		this.mainCanvas.addEventListener('mousedown', function (e) {
@@ -28,6 +43,7 @@ function Game (mainCanvas) {
 				g.trigger('mousedown', createMouseEvent(e));
 				g.mouseButtons.push('right');
 			}
+			return false;
 		});
 
 		this.mainCanvas.addEventListener('mouseup', function (e) {
@@ -41,8 +57,27 @@ function Game (mainCanvas) {
 				g.trigger('mouseup', createMouseEvent(e));
 				g.mouseButtons.remove('right');
 			}
+			return false;
 		});
+
+		this.mainCanvas.addEventListener('mousemove', function (e) {
+			var mouseEvent = createMouseEvent(e);
+			g.trigger('mousemove', createMouseEvent(e));
+			g.mousePosition = mouseEvent;
+		});
+
+		this.mainCanvas.oncontextmenu = function () { return false; };
 	}
+
+
+	function resizeCanvas() {
+		mainCanvas.width = window.innerWidth;
+		mainCanvas.height = window.innerHeight;
+	}
+
+	resizeCanvas();
+
+	window.addEventListener('resize', resizeCanvas, false);
 
 	bindMouse(this);
 }
@@ -198,9 +233,5 @@ var game = new Game(mainCanvas);
 game.loadAudio(['audio/waves-of-diamond_fatkidwithajetpack.mp3']);
 game.on('loadComplete', function (a) {
 	game.start();
-	// game.playAudio('audio/waves-of-diamond_fatkidwithajetpack.mp3');
-});
-
-game.on('mousedown', function (e) {
-	console.log(e);
+	game.playAudio('audio/waves-of-diamond_fatkidwithajetpack.mp3');
 });

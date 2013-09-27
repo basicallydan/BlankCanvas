@@ -21,10 +21,13 @@ I made this little repo as a good starting point for any from-scratch HTML5 canv
 * Ability to play audio and pause audio
 * Basic event listening/triggering
 	* Event handling for when the game finishes loading the assets
+* [Mousetrap](http://craig.is/killing/mice) for capturing keyboard controls
+* Basic mouse controls
+	* Mouse up/down/move
 
 ## It *will* include:
 
-* Basic input control handling
+* Mouse dragging
 * Methods to stop and mix audio
 
 # Contributing
