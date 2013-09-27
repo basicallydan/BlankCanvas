@@ -6,13 +6,15 @@ I made this little repo as a good starting point for any from-scratch HTML5 canv
 
 * A simple `Game` object which contains the loop
 * Methods to preload images
+* Methods to preload audio
+* Ability to play audio and pause audio
+* Basic event listening/triggering
+	* Event handling for when the game finishes loading the assets
 
 ## It *will* include:
 
-* Methods to preload audio
-* Event handlers for load finished events
 * Basic input control handling
-* Methods to play, stop, pause and mix audio
+* Methods to stop and mix audio
 
 # Credits:
 
