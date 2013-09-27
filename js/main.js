@@ -1,3 +1,8 @@
+function createMouseEvent(e) {
+	var mouseEvent = {};
+	return mouseEvent;
+}
+
 // The game
 function Game (mainCanvas) {
 	this.gameLoop = false;
@@ -9,6 +14,37 @@ function Game (mainCanvas) {
 	this.sounds = {};
 	this.currentAudioSource = '';
 	this.eventListeners = {};
+	this.mouseButtons = [];
+
+	function bindMouse(g) {
+		this.mainCanvas.addEventListener('mousedown', function (e) {
+			if (e.which === 1) { // Left click
+				g.trigger('mousedown', createMouseEvent(e));
+				g.mouseButtons.push('left');
+			} else if (e.which === 2) { // Middle click
+				g.trigger('mousedown', createMouseEvent(e));
+				g.mouseButtons.push('middle');
+			} else if (e.which === 3) { // Right click
+				g.trigger('mousedown', createMouseEvent(e));
+				g.mouseButtons.push('right');
+			}
+		});
+
+		this.mainCanvas.addEventListener('mouseup', function (e) {
+			if (e.which === 1) { // Left click
+				g.trigger('mouseup', createMouseEvent(e));
+				g.mouseButtons.remove('left');
+			} else if (e.which === 2) { // Middle click
+				g.trigger('mouseup', createMouseEvent(e));
+				g.mouseButtons.remove('middle');
+			} else if (e.which === 3) { // Right click
+				g.trigger('mouseup', createMouseEvent(e));
+				g.mouseButtons.remove('right');
+			}
+		});
+	}
+
+	bindMouse(this);
 }
 
 Game.prototype.on = function (eventName, cb) {
@@ -65,7 +101,7 @@ Game.prototype.pause = function () {
 
 Game.prototype.cycle = function () {
 	// First we clear the canvas by setting the width to the width
-	this.mainCanvas .width = this.mainCanvas.width;
+	this.mainCanvas.width = this.mainCanvas.width;
 };
 
 Game.prototype.storeLoadedImage = function (key, image) {
@@ -162,5 +198,9 @@ var game = new Game(mainCanvas);
 game.loadAudio(['audio/waves-of-diamond_fatkidwithajetpack.mp3']);
 game.on('loadComplete', function (a) {
 	game.start();
-	game.playAudio('audio/waves-of-diamond_fatkidwithajetpack.mp3');
+	// game.playAudio('audio/waves-of-diamond_fatkidwithajetpack.mp3');
+});
+
+game.on('mousedown', function (e) {
+	console.log(e);
 });
